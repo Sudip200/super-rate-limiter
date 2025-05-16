@@ -1,7 +1,3 @@
-Here’s a clean, fixed, and professional version of your **`README.md`** file for the `super-rate-limiter` NPM package:
-
----
-
 # Super Rate Limiter 🚀
 
 [![npm version](https://img.shields.io/npm/v/super-rate-limiter)](https://www.npmjs.com/package/super-rate-limiter)
