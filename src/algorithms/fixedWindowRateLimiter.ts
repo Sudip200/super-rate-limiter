@@ -1,5 +1,5 @@
 import { count } from "console";
-import entryType from "../types/entryType";
+import {fixedWindowRateLimiterEntryType} from "../types/entryType";
 import { KeyType } from "../types/keyType";
 import { storeType } from "../types/storeType";
 import RateLimiter from "./rateLimiterInterface";
@@ -18,7 +18,7 @@ class FixedWindowRateLimiter extends RateLimiter {
   }
   public async allowAccess(key: KeyType): Promise<boolean> {
     let currentTime = Date.now();
-    let entry: entryType = await this.store.getData(key);
+    let entry: fixedWindowRateLimiterEntryType = await this.store.getData(key);
     if ((!entry || (currentTime - entry.startTime) >= this.maxWindowSize)) {
       entry = { count: 1, startTime: currentTime };
       await this.store.setData(key, entry);

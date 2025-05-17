@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach, vi, afterEach } from 'vitest';
-import LeakyBucketRateLimiter from '../dist/algorithms/leakyBucketRateLimiter';
+import LeakyBucketRateLimiter from '../../dist/algorithms/leakyBucketRateLimiter';
 
 describe('LeakyBucketRateLimiter', () => {
   let limiter: LeakyBucketRateLimiter;

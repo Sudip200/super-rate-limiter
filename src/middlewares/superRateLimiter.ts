@@ -17,6 +17,6 @@ export const superRateLimiter = (options: RateLimiterOptions) => {
                 }
                 next();
             })
-            .catch(next); // Pass any errors to Express error handler
+            .catch(next); 
     };
 }

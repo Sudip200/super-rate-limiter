@@ -1,5 +1,5 @@
 import { describe, expect, test, beforeEach, vi } from 'vitest';
-import FixedWindowRateLimiter from '../dist/algorithms/fixedWindowRateLimiter';
+import FixedWindowRateLimiter from '../../dist/algorithms/fixedWindowRateLimiter';
 
 describe('FixedWindowRateLimiter', () => {
   let limiter: FixedWindowRateLimiter;

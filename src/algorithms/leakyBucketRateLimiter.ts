@@ -1,11 +1,8 @@
+import { LeakyBucketEntry } from "../types/entryType";
 import { KeyType } from "../types/keyType";
 import { storeType } from "../types/storeType";
 import IRateLimiter from "./rateLimiterInterface";
 
-interface LeakyBucketEntry {
-  lastLeakTime: number;
-  queue: number[]; 
-}
 export default class LeakyBucketRateLimiter extends IRateLimiter {
   private capacity: number;
   private leakRatePerSec: number;
