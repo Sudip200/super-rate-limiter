@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import express from "express";
 import request from "supertest";
-import { superRateLimiter } from "../src/middlewares/superRateLimiter";
+import { superRateLimiter } from "../dist/middlewares/superRateLimiter";
 
 describe("superRateLimiter middleware", () => {
   test("should rate limit requests", async () => {
