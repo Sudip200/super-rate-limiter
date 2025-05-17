@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import express from "express";
 import request from "supertest";
-import { superRateLimiter } from "../dist/middlewares/superRateLimiter";
+import { superRateLimiter } from "../src/middlewares/superRateLimiter";
 
 describe("superRateLimiter middleware", () => {
   test("should rate limit requests", async () => {
@@ -10,10 +10,10 @@ describe("superRateLimiter middleware", () => {
     // Apply rate limiter
     app.use(
       superRateLimiter({
-        algorithm: "fixed-window",
+        algorithm: "leaky-bucket",
         storeType: "in-memory",
-        maxRequests: 2,
-        windowSizeInMS: 1000,
+        leakRatePerSec:2,
+        capacity:5
       })
     );
 
