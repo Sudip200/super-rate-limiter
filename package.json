@@ -1,6 +1,6 @@
 {
   "name": "super-rate-limiter",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Flexible rate limiting middleware for Express with multiple algorithms and storage options",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

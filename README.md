@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/super-rate-limiter)](https://www.npmjs.com/package/super-rate-limiter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> A flexible, production-ready rate limiting middleware for Express.js with multiple algorithms and storage options.
+> A flexible, production-ready rate limiting middleware for Express.js with support for **multiple algorithms** and **pluggable storage backends**.
 
 ---
 
@@ -12,22 +12,26 @@
 * 🎯 **Multiple Algorithms**
 
   * ✅ Fixed Window
-  * 🕒 Sliding Window *(coming soon)*
-  * 🪣 Token Bucket *(coming soon)*
-  * 💧 Leaky Bucket *(coming soon)*
+  * ✅ Sliding Window
+  * ✅ Token Bucket
+  * ✅ Leaky Bucket
 
 * 💾 **Storage Backends**
 
   * In-Memory (single instance)
-  * Redis (distributed environments)
+  * Redis (distributed environments) [Coming Soon]
 
-* 🔑 **Flexible Key Generation**
+* 🔑 **Flexible Key Extraction**
 
-  * Based on IP, API keys, user sessions, or custom extractors
+  * Based on IP, API key, user ID, etc.
 
-* ⚡ **High Performance**: Minimal latency overhead
+* ⚡ **High Performance**
 
-* 🛡️ **Type Safety**: Fully written in TypeScript
+  * Minimal latency overhead, async-ready
+
+* 🛡️ **Type Safe**
+
+  * Fully written in TypeScript
 
 ---
 
@@ -67,15 +71,13 @@ app.get('/', (req, res) => res.send('Hello World!'));
 
 ```ts
 app.use('/api', superRateLimiter({
-  algorithm: 'fixed-window',
-  storeType: 'redis',
-  maxRequests: 10,
-  windowSizeInMS: 60 * 1000,
+  algorithm: 'leaky-bucket',
+  storeType: 'in-memory',
+  capacity: 10,
+  leakRatePerSec: 1,
   keyExtractor: (req) => req.headers['api-key'] as string,
 }));
 ```
-
-
 
 ---
 
@@ -83,16 +85,36 @@ app.use('/api', superRateLimiter({
 
 ### `superRateLimiter(options: RateLimiterOptions)`
 
-| Parameter        | Type                                      | Required | Description                                 |
-| ---------------- | ----------------------------------------- | -------- | ------------------------------------------- |
-| `algorithm`      | `"fixed-window"` \| `"token-bucket"` etc. | ✅        | Algorithm to use                            |
-| `storeType`      | `"in-memory"` \| `"redis"`                | ✅        | Storage backend type                        |
-| `maxRequests`    | `number`                                  | ✅\*      | Max requests per window                     |
-| `windowSizeInMS` | `number`                                  | ✅\*      | Time window duration in milliseconds        |
-| `keyExtractor`   | `(req: Request) => string`                | ❌        | Custom key generator (defaults to `req.ip`) |
+| Parameter      | Type                                                                           | Required | Description                                           |
+| -------------- | ------------------------------------------------------------------------------ | -------- | ----------------------------------------------------- |
+| `algorithm`    | `"fixed-window"` \| `"sliding-window"` \| `"token-bucket"` \| `"leaky-bucket"` | ✅        | Rate limiting algorithm to apply                      |
+| `storeType`    | `"in-memory"` \| `"redis"`                                                     | ✅        | Backend for rate limit data                           |
+| `keyExtractor` | `(req: Request) => string`                                                     | ❌        | Function to extract unique key (defaults to `req.ip`) |
 
+> Other fields depend on the selected algorithm:
 
-> \*Required for `fixed-window` and similar algorithms.
+### Algorithm-Specific Options
+
+#### Fixed Window & Sliding Window
+
+| Option           | Type   | Required | Description                             |
+| ---------------- | ------ | -------- | --------------------------------------- |
+| `maxRequests`    | number | ✅        | Max requests allowed                    |
+| `windowSizeInMS` | number | ✅        | Size of the time window in milliseconds |
+
+#### Token Bucket
+
+| Option             | Type   | Required | Description                  |
+| ------------------ | ------ | -------- | ---------------------------- |
+| `capacity`         | number | ✅        | Maximum tokens in the bucket |
+| `refillRatePerSec` | number | ✅        | Tokens added per second      |
+
+#### Leaky Bucket
+
+| Option           | Type   | Required | Description                                  |
+| ---------------- | ------ | -------- | -------------------------------------------- |
+| `capacity`       | number | ✅        | Max queue length                             |
+| `leakRatePerSec` | number | ✅        | Requests leaked per second (rate of outflow) |
 
 ---
 
@@ -100,51 +122,67 @@ app.use('/api', superRateLimiter({
 
 ### 1. **Fixed Window**
 
-* Maintains a simple counter per key per window
-* Resets at fixed intervals
-* **Example**: “100 requests per minute”
+> A simple counter that resets every fixed interval.
 
-> ✅ Simple, fast, memory-efficient
-> ❌ Allows spikes near boundary transitions
+✅ Simple, memory-efficient
+❌ Susceptible to burst at edges
 
 ---
 
-## ⚡ Benchmarks (Sample)
+### 2. **Sliding Window**
 
-| Algorithm    | Requests/sec | Avg Latency (ms) |
-| ------------ | ------------ | ---------------- |
-| Fixed Window | 15,000       | 0.8              |
-| In-memory    | 18,000       | 0.5              |
+> Smoother version of fixed window with rolling window counting.
 
-*(Add more once other algorithms are implemented.)*
+✅ Smooth traffic control
+❌ Slightly higher memory usage
+
+---
+
+### 3. **Token Bucket**
+
+> Tokens are added at a fixed rate, requests consume tokens.
+
+✅ Handles bursts well
+✅ More flexible than fixed window
+❌ Requires careful tuning
+
+---
+
+### 4. **Leaky Bucket**
+
+> Queue-like structure, processes requests at a constant rate.
+
+✅ Smooth flow, predictable rate
+❌ Can delay burst traffic
+
+---
+
+## ⚡ Benchmarks (In-Memory, Sample)
+
+| Algorithm      | Requests/sec | Avg Latency (ms) |
+| -------------- | ------------ | ---------------- |
+| Fixed Window   | 15,000       | 0.8              |
+| Sliding Window | 14,000       | 0.9              |
+| Token Bucket   | 13,500       | 1.0              |
+| Leaky Bucket   | 13,200       | 1.1              |
+
 
 ---
 
 ## 🛠 Contributing
 
-Contributions are welcome!
-To get started:
+We welcome contributions!
 
-1. **Fork** this repo
-2. **Create a feature branch**
-3. **Submit a pull request (PR)**
-
-Please follow conventional commits and include tests where applicable.
+1. Fork the repo
+2. Create a feature branch
+3. Commit using conventional commits
+4. Include tests where applicable
+5. Submit a PR
 
 ---
 
 ## 📄 License
 
 MIT © [Sudipto Das](https://github.com/sudip200)
-
----
-
-## 🔮 Roadmap
-
-* [ ] Add Token Bucket support
-* [ ] Add Sliding Window support
-* [ ] Add Leaky Bucket support
-* [ ] Add CLI for testing rate limits
-* [ ] Add Prometheus metrics support
 
 
