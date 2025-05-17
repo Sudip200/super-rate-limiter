@@ -1,30 +1,30 @@
 import { KeyType } from "../types/keyType";
 import IStore from "./storeInterface";
 
-class InMemoryStore implements IStore {
-    protected store: Map<KeyType, any>;
+class InMemoryStore<T> implements IStore<T> {
+    protected store: Map<KeyType, T>;
 
     constructor() {
-        this.store = new Map<KeyType, any>();
+        this.store = new Map<KeyType, T>();
     }
 
     async getData(key: KeyType): Promise<any> {
         return this.store.get(key);
     }
 
-    async setData(key: KeyType, value: any): Promise<any> {
+    async setData(key: KeyType, value:T): Promise<void> {
         this.store.set(key, value);
     }
 
-    async deleteData(key: KeyType): Promise<any> {
+    async deleteData(key: KeyType): Promise<void> {
         this.store.delete(key);
     }
 
-    async clearAll(): Promise<any> {
+    async clearAll(): Promise<void> {
         this.store.clear();
     }
 
-    async hasKey(key: KeyType): Promise<any> {
+    async hasKey(key: KeyType): Promise<boolean> {
         return this.store.has(key);
     }
 }

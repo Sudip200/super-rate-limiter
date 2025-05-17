@@ -4,7 +4,7 @@ import { KeyType } from "../types/keyType";
 import { storeType } from "../types/storeType";
 import RateLimiter from "./rateLimiterInterface";
 
-class FixedWindowRateLimiter extends RateLimiter {
+class FixedWindowRateLimiter extends RateLimiter<fixedWindowRateLimiterEntryType> {
   private maxWindowSize: number;
   private maxRequests: number;
   constructor(

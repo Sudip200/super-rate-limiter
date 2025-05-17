@@ -4,7 +4,7 @@ import { storeType } from "../types/storeType";
 import IRateLimiter from "./rateLimiterInterface";
 
 
-export default class SlidingWindowRateLimiter extends IRateLimiter {
+export default class SlidingWindowRateLimiter extends IRateLimiter<SlidingWindowEntry>{
   private windowSizeMs: number;
   private maxRequests: number;
 

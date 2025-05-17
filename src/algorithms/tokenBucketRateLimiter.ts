@@ -4,7 +4,7 @@ import { storeType } from "../types/storeType";
 import RateLimiter from "./rateLimiter";
 import IRateLimiter from "./rateLimiterInterface";
 
-export default class TokenBucketRateLimiter extends IRateLimiter{
+export default class TokenBucketRateLimiter extends IRateLimiter<TokenBucketEntryType>{
     private capacity:number;
     private refillRatePerSec:number;
     constructor(capacity:number,refillRatePerSec:number,storeType:storeType){

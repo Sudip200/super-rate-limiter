@@ -3,7 +3,7 @@ import { KeyType } from "../types/keyType";
 import { storeType } from "../types/storeType";
 import IRateLimiter from "./rateLimiterInterface";
 
-export default class LeakyBucketRateLimiter extends IRateLimiter {
+export default class LeakyBucketRateLimiter extends IRateLimiter<LeakyBucketEntry> {
   private capacity: number;
   private leakRatePerSec: number;
   

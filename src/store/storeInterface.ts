@@ -1,9 +1,9 @@
 import { KeyType } from "../types/keyType";
-interface IStore{
-    getData(key:KeyType):Promise<any>;
-    setData(key:KeyType,value:any):Promise<any>;
-    deleteData(key:KeyType):Promise<any>;
-    clearAll():Promise<any>;
-    hasKey(key:KeyType):Promise<any>;
+interface IStore<T>{
+    getData(key:KeyType):Promise<T>;
+    setData(key:KeyType,value:T):Promise<void>;
+    deleteData(key:KeyType):Promise<void>;
+    clearAll():Promise<void>;
+    hasKey(key:KeyType):Promise<boolean>;
 }
 export default IStore;

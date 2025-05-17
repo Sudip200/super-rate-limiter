@@ -7,7 +7,7 @@ import SlidingWindowRateLimiter from "./slidingWindowRateLimiter";
 import TokenBucketRateLimiter from "./tokenBucketRateLimiter";
 
 class RateLimiter{
-    private algoStrategy:IRateLimiter;
+    private algoStrategy:IRateLimiter<any>;
     constructor(options:RateLimiterOptions){
      switch(options.algorithm){
         case 'fixed-window':
