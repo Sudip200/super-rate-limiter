@@ -8,8 +8,8 @@ class InMemoryStore<T> implements IStore<T> {
         this.store = new Map<KeyType, T>();
     }
 
-    async getData(key: KeyType): Promise<any> {
-        return this.store.get(key);
+    async getData(key: KeyType): Promise<T | null> {
+        return this.store.get(key) ?? null;
     }
 
     async setData(key: KeyType, value:T): Promise<void> {

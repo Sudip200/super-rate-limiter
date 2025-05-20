@@ -18,7 +18,7 @@ class FixedWindowRateLimiter extends RateLimiter<fixedWindowRateLimiterEntryType
   }
   public async allowAccess(key: KeyType): Promise<boolean> {
     let currentTime = Date.now();
-    let entry: fixedWindowRateLimiterEntryType = await this.store.getData(key);
+    let entry: fixedWindowRateLimiterEntryType | null = await this.store.getData(key);
     if ((!entry || (currentTime - entry.startTime) >= this.maxWindowSize)) {
       entry = { count: 1, startTime: currentTime };
       await this.store.setData(key, entry);

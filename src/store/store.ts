@@ -17,7 +17,7 @@ class Store<T> implements IStore<T> {
         }
     }
 
-    async getData(key: KeyType): Promise<T> {
+    async getData(key: KeyType): Promise<T | null> {
         return this.store.getData(key);
     }
 
